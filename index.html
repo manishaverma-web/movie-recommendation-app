@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MovieVerse | Movie Recommendations</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+        }
+
+        .navbar {
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ffcc00;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 70px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #dddddd;
+            margin-bottom: 35px;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: auto;
+            max-width: 650px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 16px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ffcc00;
+            color: #222;
+        }
+
+        .search-box button:hover {
+            transform: scale(1.03);
+        }
+
+        .movie-info {
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: left;
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .poster {
+            width: 200px;
+            border-radius: 10px;
+        }
+
+        .movie-details h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+
+        .movie-details p {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #eeeeee;
+        }
+
+        .movies-section {
+            margin-top: 60px;
+        }
+
+        .movies-section h2 {
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 25px 15px;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .movie-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .movie-title {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .error {
+            margin-top: 35px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 80, 80, 0.2);
+            color: #ffb3b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #cccccc;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .container {
+                padding: 50px 0;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+            .search-box {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-box input,
+            .search-box button {
+                width: 100%;
+            }
+
+            .movie-info {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .poster {
+                width: 180px;
+            }
+
+            .movies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .movies-section h2 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Movie<span>Verse</span> 🎬</div>
+        <div>Find Your Next Movie 🍿</div>
+    </nav>
+
+    <div class="container">
+
+        <section class="hero">
+
+            <h1>Discover Your Next Favorite Movie 🎬</h1>
+
+            <p>
+                Search for any movie and discover movie details
+                and similar recommendations.
+            </p>
+
+            <form method="POST" class="search-box">
+
+                <input
+                    type="text"
+                    name="movie_name"
+                    placeholder="Search for any movie..."
+                    value="{{ movie_name }}"
+                    required
+                >
+
+                <button type="submit">🔍 Search</button>
+
+            </form>
+
+        </section>
+
+
+        {% if movie_info %}
+
+        <section class="movie-info">
+
+            {% if movie_info.Poster != "N/A" %}
+                <img src="{{ movie_info.Poster }}" class="poster">
+            {% endif %}
+
+            <div class="movie-details">
+
+                <h2>{{ movie_info.Title }}</h2>
+
+                <p><strong>Year:</strong> {{ movie_info.Year }}</p>
+
+                <p><strong>Genre:</strong> {{ movie_info.Genre }}</p>
+
+                <p><strong>IMDb Rating:</strong> ⭐ {{ movie_info.imdbRating }}</p>
+
+                <p><strong>Actors:</strong> {{ movie_info.Actors }}</p>
+
+                <p><strong>Plot:</strong> {{ movie_info.Plot }}</p>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        {% if recommendations %}
+
+        <section class="movies-section">
+
+            <h2>Recommended For You ✨</h2>
+
+            <div class="movies-grid">
+
+                {% for movie in recommendations %}
+
+                <div class="movie-card">
+
+                    <div class="movie-icon">🎬</div>
+
+                    <div class="movie-title">
+                        {{ movie }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        {% if message %}
+
+        <div class="error">
+            😔 {{ message }}
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <footer>
+        © 2026 MovieVerse | Movie Recommendation System
+    </footer>
+
+</body>
+</html>
